@@ -2,8 +2,12 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const PORT = 3001;
+// Import the router defined in routes
+const apiRouter = require('./apiRouter');
+
 
 app.use(express.static('public'));
+app.use('/api', apiRouter);
 
 // Create Express.js routes for default '/', '/send' and '/routes' endpoints
 // app.get('/', (req, res) => res.send(`Sent to the HTML `));
