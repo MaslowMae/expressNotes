@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const router = express.Router();
 const app = express();
 const PORT = 3001;
 
@@ -14,31 +13,21 @@ let notes = [];
 const apiRouter = require('./api/routes');
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+//API ROUTES
 app.use('/api', apiRouter);
 
-app.get('/', (req, res) => {
-    res.send('hello world')
-  })
-
-// Express.js routes 
-
-app.get('/api/notes', (req, res) => {
-    // send 'index.html' for '/expressNotes' 
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
-//rout for /routes
+// Route to serve notes.html for '/routes'
 app.get('/routes', (req, res) => {
-    // send 'notes.html' for '/routes'
     res.sendFile(path.join(__dirname, 'public', 'notes.html'));
 });
 
-app.post('/api/notes', (req, res) => {
-    const newNote = req.body;
-    notes.push(newNote);
-    res.status(201).json(newNote);
+// Catch-all route to serve index.html
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
+// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
@@ -48,5 +37,3 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () =>
     console.log(`Sever up and at em at http://localhost:${PORT}`)
 );
-
-module.exports =apiRouter;
