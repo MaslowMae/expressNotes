@@ -1,3 +1,6 @@
+const express = require('express');
+const router = express.Router();
+const pulls = require('./db/notes.json');
 
 let noteForm;
 let noteTitle;
@@ -26,8 +29,7 @@ const hide = (elem) => {
   elem.style.display = 'none';
 };
 
-// activeNote is used to keep track of the note in the textarea
-let activeNote = {};
+
 
 const getNotes = () =>
   fetch('/api/notes', {
@@ -41,7 +43,7 @@ const saveNote = (note) =>
   fetch('/api/notes', {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'title': 'application/json'
     },
     body: JSON.stringify(note)
   });
@@ -75,14 +77,26 @@ const renderActiveNote = () => {
 
 const handleNoteSave = () => {
   const newNote = {
-    title: noteTitle.value,
-    text: noteText.value
+    title: document.getElementById('note-title').value,
+    text: document.getElementById('note-text').value
   };
+  fetch('/api/notes', {
+    method: 'POST',
+    headers: {
+      'content-Type': 'application/json',
+    },
+    body:JSON.stringify(newNote),
+  })
+  .then(response => response.json())
+  .then (data => {console.log('success',data);
+})
   saveNote(newNote).then(() => {
     getAndRenderNotes();
     renderActiveNote();
   });
 };
+
+
 
 // Delete the clicked note
 const handleNoteDelete = (e) => {
@@ -182,14 +196,19 @@ const renderNoteList = async (notes) => {
   }
 };
 
+document.getElementById('test-button').addEventListener('click', () => {
+  console.log('Test button clicked');
+});
+
 // Gets notes from the db and renders them to the sidebar
 const getAndRenderNotes = () => getNotes().then(renderNoteList);
 
 if (window.location.pathname === '/notes') {
-  saveNoteBtn.addEventListener('click', handleNoteSave);
-  newNoteBtn.addEventListener('click', handleNewNoteView);
-  clearBtn.addEventListener('click', renderActiveNote);
-  noteForm.addEventListener('input', handleRenderBtns);
+  document.getElementById('saveNoteBtn').addEventListener('click', handleNoteSave);
+  document.getElementById('newNoteBtn').addEventListener('click', handleNewNoteView);
+  document.getElementById('clearBtn').addEventListener('click', renderActiveNote);
+  document.getElementById('noteForm').addEventListener('input', handleRenderBtns);
 }
 
 getAndRenderNotes();
+
