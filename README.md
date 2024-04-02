@@ -6,7 +6,8 @@ Note taker app can help you create and save  new notes with descriptions, delete
 
 
 ## Visuals
-![Video Demo](https://youtu.be/QtudX9H_Ym4)
+[![Video Demo](https://img.youtube.com/vi/QtudX9H_Ym4?si=whkNWjQcr4RO0Az-/0.jpg)](https://www.youtube.com/watch?v=QtudX9H_Ym4?si=whkNWjQcr4RO0Az-)
+
 
 ## Installation
   "dependencies": {
