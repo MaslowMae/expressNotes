@@ -1,7 +1,3 @@
-const express = require('express');
-const router = express.Router();
-const pulls = require('./db/notes.json');
-
 let noteForm;
 let noteTitle;
 let noteText;
@@ -10,15 +6,17 @@ let newNoteBtn;
 let noteList;
 let clearBtn;
 
-if (window.location.pathname === '/notes') {
+if (window.location.pathname === '/notes.html') {
   noteForm = document.querySelector('.note-form');
   noteTitle = document.querySelector('.note-title');
   noteText = document.querySelector('.note-textarea');
-  saveNoteBtn = document.querySelector('.save-note');
-  newNoteBtn = document.querySelector('.new-note');
-  clearBtn = document.querySelector('.clear-btn');
+  saveNoteBtn = document.querySelector('#saveNoteBtn');
+  newNoteBtn = document.querySelector('#newNoteBtn');
+  clearBtn = document.querySelector('#clearBtn');
   noteList = document.querySelectorAll('.list-container .list-group');
 }
+
+let activeNote = {};
 
 // Show an element
 const show = (elem) => {
@@ -58,30 +56,38 @@ const deleteNote = (id) =>
 
 const handleNoteSave = () => {
   const newNote = {
-    title: document.getElementById('note-title').value,
-    text: document.getElementById('note-text').value
+    title: document.getElementById('note_name').value,
+    text: document.getElementById('detail_textarea').value
   };
   fetch('/api/notes', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body:JSON.stringify(newNote),
+    body: JSON.stringify(newNote),
   })
-  .then(response => response.json())
-  .then (data => {console.log('success',data);
-})
-  saveNote(newNote).then(() => {
-    getAndRenderNotes();
-    renderActiveNote();
-  });
+    .then(response => response.json())
+    .then(data => {
+      console.log('success', data);
+    })
+    .then(() => {
+      getAndRenderNotes();
+      consol.log('rendering notes');
+      renderActiveNote();
+    })
+
+
+  // saveNote(newNote).then(() => {
+  //   getAndRenderNotes();
+  //   renderActiveNote();
+  // });
 };
 
-renderNoteList = async (notes) => {
-  let jsonNotes = await notes.json();
-  if (window.location.pathname === '/notes') {
-    noteList.forEach((el) => (el.innerHTML = ''));
-  }}
+// renderNoteList = async (notes) => {
+//   let jsonNotes = await notes.json();
+//   if (window.location.pathname === '/notes') {
+//     noteList.forEach((el) => (el.innerHTML = ''));
+//   }}
 
 // Delete the clicked note
 const handleNoteDelete = (e) => {
@@ -127,10 +133,27 @@ const handleRenderBtns = () => {
   }
 };
 
+const renderActiveNote = () => {
+  hide(saveNoteBtn);
+
+  if (activeNote.id) {
+    noteTitle.setAttribute('readonly', true);
+    noteText.setAttribute('readonly', true);
+    noteTitle.value = activeNote.title;
+    noteText.value = activeNote.text;
+    show(newNoteBtn)
+  } else {
+    noteTitle.removeAttribute('readonly');
+    noteText.removeAttribute('readonly');
+    noteTitle.value = '';
+    noteText.value = '';
+  }
+}
+
 // Render the list of note titles
 const renderNoteList = async (notes) => {
   let jsonNotes = await notes.json();
-  if (window.location.pathname === '/notes') {
+  if (window.location.pathname === '/notes.html') {
     noteList.forEach((el) => (el.innerHTML = ''));
   }
 
@@ -176,7 +199,7 @@ const renderNoteList = async (notes) => {
     noteListItems.push(li);
   });
 
-  if (window.location.pathname === '/notes') {
+  if (window.location.pathname === '/notes.html') {
     noteListItems.forEach((note) => noteList[0].append(note));
   }
 };
@@ -184,7 +207,7 @@ const renderNoteList = async (notes) => {
 // Gets notes from the db and renders them to the sidebar
 const getAndRenderNotes = () => getNotes().then(renderNoteList);
 
-if (window.location.pathname === '/notes') {
+if (window.location.pathname === '/notes.html') {
   saveNoteBtn.addEventListener('click', handleNoteSave);
   newNoteBtn.addEventListener('click', handleNewNoteView);
   clearBtn.addEventListener('click', renderActiveNote);

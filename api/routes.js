@@ -3,8 +3,6 @@ const router = express.Router();
 const fs = require('fs');
 const path = require('path');
 
-
-
 // Load notes from notes.json
 const notesPath = path.join(__dirname, '..', 'db', 'notes.json');
 
