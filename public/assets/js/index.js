@@ -72,7 +72,6 @@ const handleNoteSave = () => {
     })
     .then(() => {
       getAndRenderNotes();
-      consol.log('rendering notes');
       renderActiveNote();
     })
 
@@ -85,7 +84,7 @@ const handleNoteSave = () => {
 
 // renderNoteList = async (notes) => {
 //   let jsonNotes = await notes.json();
-//   if (window.location.pathname === '/notes') {
+//   if (window.location.pathname === '/note.html') {
 //     noteList.forEach((el) => (el.innerHTML = ''));
 //   }}
 
@@ -147,6 +146,7 @@ const renderActiveNote = () => {
     noteText.removeAttribute('readonly');
     noteTitle.value = '';
     noteText.value = '';
+    show(newNoteBtn)
   }
 }
 
